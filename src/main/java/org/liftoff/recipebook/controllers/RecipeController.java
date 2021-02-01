@@ -1,9 +1,11 @@
 package org.liftoff.recipebook.controllers;
 
+import org.liftoff.recipebook.models.User;
 import org.liftoff.recipebook.models.data.RecipeCategoryRepository;
 import org.liftoff.recipebook.models.data.RecipeRepository;
 import org.liftoff.recipebook.models.Recipe;
 import org.liftoff.recipebook.models.RecipeCategory;
+import org.liftoff.recipebook.models.data.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 
@@ -23,10 +26,21 @@ public class RecipeController {
     @Autowired
     private RecipeCategoryRepository recipeCategoryRepository;
 
+    @Autowired
+    AuthenticationController authenticationController;
+
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping("CreateRecipe")
-    public String renderCreateRecipeForm(Model model){
+    public String renderCreateRecipeForm(Model model, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        User sessionUser = authenticationController.getUserFromSession(session);
+        int userId = sessionUser.getId();
+
         model.addAttribute("recipe",new Recipe());
         model.addAttribute("categories", recipeCategoryRepository.findAll());
+        model.addAttribute("profile", userRepository.findById(userId).get());
         return "CreateRecipe";
     }
 

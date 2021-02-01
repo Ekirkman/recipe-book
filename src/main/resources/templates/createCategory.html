@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org/">
-<head>
-    <meta charset="UTF-8"/>
-    <title>Title</title>
-</head>
+<head th:replace="fragments :: head"></head>
     <body>
+    <nav th:replace="fragments :: page-header"></nav>
         <form method="post">
             <input type="text" name="name" placeholder="Enter New Category">
             <button type="submit">ADD</button>
