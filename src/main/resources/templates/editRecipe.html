@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <head th:replace="fragments :: head"></head>
+    <nav th:replace="fragments :: page-header"></nav>
+</head>
+<body>
+<h1>Choose a recipe to edit</h1>
+    <form method="post">
+        <tr th:each="recipe : ${recipesToEdit} ">
+            <input type="radio"th:value="${recipe.id}" th:name="editThis"/>
+             <lable  th:text="${recipe.name}"/>
+            <br>
+        </tr>
+        <br>
+        <button type="submit" value="Submit">Submit</button>
+    </form>
+</body>
+</html>

@@ -98,4 +98,54 @@ public class RecipeController {
 
         return "profile";
     }
+
+    @GetMapping("editRecipe")
+    public String displayChooseARecipeToEdit(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        User sessionUser = authenticationController.getUserFromSession(session);
+        int userId = sessionUser.getId();
+        model.addAttribute("profile", userRepository.findById(userId).get());
+        model.addAttribute("recipesToEdit",recipeRepository.getAllRecipesByUserId(userId));
+        return "editRecipe";
+    }
+    @PostMapping("editRecipe")
+    public String displayEditRecipeForm(@RequestParam int editThis, HttpServletRequest request,
+                               Model model){
+        HttpSession session = request.getSession();
+        User sessionUser = authenticationController.getUserFromSession(session);
+        User user = userRepository.findById(sessionUser.getId()).get();
+        int userId = sessionUser.getId();
+        Recipe needToSplit = recipeRepository.findById(editThis);
+        String[] currentIngredients = needToSplit.getIngredients().split("\\$\\$");
+        model.addAttribute("user", user);
+        model.addAttribute("profile", userRepository.findById(userId).get());
+        model.addAttribute("editThisRecipe",recipeRepository.findById(editThis));
+        model.addAttribute("categories", recipeCategoryRepository.findAll());
+        model.addAttribute("currentIngredients",currentIngredients);
+        return "editRecipeForm";
+    }
+    @PostMapping("saveEditedRecipe")
+    public String saveEditedRecipe(@RequestParam String name, Recipe recipe, @RequestParam String description,
+                               @RequestParam String hiddenIngredients, @RequestParam RecipeCategory category,
+                               @RequestParam String imageUrl, HttpSession session,@RequestParam String oldRecipeId,
+                                   @RequestParam(required = false) String originalIngredients) {
+
+
+        String x ="";
+        //Get the userId from the session
+//        int currentUserId = (int) session.getAttribute("user");
+        int i = Integer.parseInt(oldRecipeId);
+        Recipe recipeBeingEdited = recipeRepository.findById(i);
+        //save the recipe to th database
+       if(imageUrl.trim()!=""){recipeBeingEdited.setImageUrl(imageUrl);}
+        recipeBeingEdited.setName(name);
+        recipeBeingEdited.setDescription(description.trim());//added .trim() to get rid of unnecessary white space
+        recipeBeingEdited.setCategory(category);
+        if(originalIngredients.trim()!=""){x = originalIngredients.replace(",","$$");}
+       //cant use commas in ingredients yet
+        String newIngredients = x.concat("$$"+hiddenIngredients);
+        if(newIngredients.trim() !=""){recipeBeingEdited.setIngredients(newIngredients);}
+        recipeRepository.save(recipeBeingEdited);
+        return "redirect:";
+    }
 }

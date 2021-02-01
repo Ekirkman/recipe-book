@@ -4,21 +4,25 @@
 <nav th:replace="fragments :: page-header"></nav>
 <body>
 <br>
-<form method='post'>
+<form method='post' action="/saveEditedRecipe">
+
     <div>
-        <img src="./images/meal-placeholder.jpg" width="320" height="320"> <br>
-        <input name="imageUrl" type="text" class="form-control" placeholder="Past image url here">
+        <img  th:src="${editThisRecipe.imageUrl}" width="320" height="320"> <br>
+        <input name="imageUrl" type="text" class="form-control" placeholder="Paste an image Url"/>
     </div>
     <div>
         <label>Dish Name:
-            <input name="name" class="form-control"/>
+            <input name="name" class="form-control" th:value="${editThisRecipe.name}"/>
         </label>
     </div>
     <div class="input-group mb-3">
         <label>Ingredients:
             <br>
         <input id="ingredientInput" type="text" class="form-control" placeholder="Ex: 1 cup of flour" aria-label="Add Ingredient" aria-describedby="basic-addon2" name="ingredients" width="50px">
-        <input type="hidden" name="hiddenIngredients" id="hide">
+            <tr th:each="ingredient : ${currentIngredients}">
+                <input  type="checkbox" th:id="${ingredient}" name="originalIngredients" th:text="${ingredient}" th:value="${ingredient}"/>
+            </tr>
+            <input type="hidden" name="hiddenIngredients" id="hide"/>
         <div class="input-group-append">
             <button class="btn btn-outline-info" id="add" type="button">Add Ingredient</button>
         </div>
@@ -32,7 +36,7 @@
         <label>
             Preparation Instructions:
              <br>
-            <textarea name="description" class="form-control" >
+            <textarea name="description" class="form-control" th:text="${editThisRecipe.description}">
             </textarea>
         </label>
     </div>
@@ -46,6 +50,7 @@
             </select>
         </label>
     </div>
+    <input type="hidden" th:value="${editThisRecipe.id}" name="oldRecipeId"/>
 
 
     <button type="submit" value="Submit">Submit</button>
