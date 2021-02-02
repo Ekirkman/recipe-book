@@ -48,13 +48,12 @@ public class RecipeController {
     @PostMapping("CreateRecipe")
     public String createRecipe(@RequestParam String name, Recipe recipe, @RequestParam String description,
                                @RequestParam String hiddenIngredients, @RequestParam RecipeCategory category,
-                               @RequestParam String imageUrl, HttpSession session){
+                               @RequestParam String imageUrl, HttpSession session,Model model){
 
 
         //Get the userId from the session
         int currentUserId = (int) session.getAttribute("user");
 
-     System.out.print(currentUserId);
 
         //save the recipe to th database
         recipe.setUserId(currentUserId);
@@ -64,35 +63,32 @@ public class RecipeController {
         recipe.setIngredients(hiddenIngredients);
         recipe.setCategory(category);
         recipeRepository.save(recipe);
-    return "redirect:";
+        User user = userRepository.findById(currentUserId).get();
+        model.addAttribute("profile", userRepository.findById(currentUserId).get());
+        model.addAttribute("user", user);
+
+        return "profile";
     }
 
-//    this is just to test the url function.
-//    @GetMapping("testpic")
-//    public String testPic(Model model){
-//       model.addAttribute("recipePic",recipeRepository.findById(80));
-//        System.out.print("something");
-//        return "testpic";
-//    }
+
     @GetMapping("delete")
     public String displayRemoveRecipe(Model model, HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        User sessionUser = authenticationController.getUserFromSession(session);
-        int userId = sessionUser.getId();
-        model.addAttribute("profile", userRepository.findById(userId).get());
-        model.addAttribute("recipesToDelete",recipeRepository.getAllRecipesByUserId(userId));
-        return "delete";
+    HttpSession session = request.getSession();
+    User sessionUser = authenticationController.getUserFromSession(session);
+    int userId = sessionUser.getId();
+    model.addAttribute("profile", userRepository.findById(userId).get());
+    model.addAttribute("recipesToDelete",recipeRepository.getAllRecipesByUserId(userId));
+    return "delete";
     }
+
     @PostMapping("delete")
     public String removeRecipe(@RequestParam int deleteThis, HttpServletRequest request,
                                Model model){
         recipeRepository.deleteById(deleteThis);
-        Boolean isUserInSession = true;
         HttpSession session = request.getSession();
         User sessionUser = authenticationController.getUserFromSession(session);
         User user = userRepository.findById(sessionUser.getId()).get();
         int userId = sessionUser.getId();
-        model.addAttribute("isUserInSession", isUserInSession);
         model.addAttribute("user", user);
         model.addAttribute("profile", userRepository.findById(userId).get());
 
@@ -126,26 +122,42 @@ public class RecipeController {
     }
     @PostMapping("saveEditedRecipe")
     public String saveEditedRecipe(@RequestParam String name, Recipe recipe, @RequestParam String description,
-                               @RequestParam String hiddenIngredients, @RequestParam RecipeCategory category,
+                               @RequestParam(required = false) String hiddenIngredients, @RequestParam RecipeCategory category,
                                @RequestParam String imageUrl, HttpSession session,@RequestParam String oldRecipeId,
                                    @RequestParam(required = false) String originalIngredients) {
 
-
+        String p = hiddenIngredients;
+        String v = originalIngredients;
         String x ="";
         //Get the userId from the session
 //        int currentUserId = (int) session.getAttribute("user");
         int i = Integer.parseInt(oldRecipeId);
         Recipe recipeBeingEdited = recipeRepository.findById(i);
         //save the recipe to th database
+        if(v == null && p == null){
+            return "redirect";
+        }else{
+            if(p.trim()!= null){x = v.replace(",","$$");}
+            //cant use commas in ingredients yet
+            String newIngredients = x.concat("$$"+p);
+            if(newIngredients.trim() !=""){recipeBeingEdited.setIngredients(newIngredients);}
+        }
+
        if(imageUrl.trim()!=""){recipeBeingEdited.setImageUrl(imageUrl);}
         recipeBeingEdited.setName(name);
         recipeBeingEdited.setDescription(description.trim());//added .trim() to get rid of unnecessary white space
         recipeBeingEdited.setCategory(category);
-        if(originalIngredients.trim()!=""){x = originalIngredients.replace(",","$$");}
-       //cant use commas in ingredients yet
-        String newIngredients = x.concat("$$"+hiddenIngredients);
-        if(newIngredients.trim() !=""){recipeBeingEdited.setIngredients(newIngredients);}
         recipeRepository.save(recipeBeingEdited);
         return "redirect:";
     }
 }
+
+
+
+
+
+
+
+
+
+
