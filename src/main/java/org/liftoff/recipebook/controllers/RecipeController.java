@@ -66,6 +66,8 @@ public class RecipeController {
         User user = userRepository.findById(currentUserId).get();
         model.addAttribute("profile", userRepository.findById(currentUserId).get());
         model.addAttribute("user", user);
+        String[] myIngredients = recipe.getIngredients().split("\\$\\$");
+        model.addAttribute("myIngredients",myIngredients);
 
     return "view";
 
@@ -94,6 +96,10 @@ public class RecipeController {
         model.addAttribute("profile", userRepository.findById(userId).get());
         return "profile";
     }
+
+
+    //Edit code still in progress still gives an error when a empty recipe is submitted
+
 
     @GetMapping("editRecipe")
     public String displayChooseARecipeToEdit(Model model, HttpServletRequest request) {

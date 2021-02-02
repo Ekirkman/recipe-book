@@ -6,8 +6,11 @@ import org.liftoff.recipebook.models.data.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,11 +28,9 @@ public class ViewController {
 
 
     @RequestMapping(value = "recipe")
-    public String view(Model model) {
+    public String view(Model model,HttpServletRequest request) {
         model.addAttribute("recipes", recipeRepository.findAll());
         model.addAttribute("categories", recipeCategoryRepository.findAll());
-//        List<String> ingredientList = Arrays.asList(recipe.ingredients.split("$$"));
-
         return "view/{id}";
     }
 
