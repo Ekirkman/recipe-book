@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+
+<body class="container  body-content">
+
+<h1 th:text="${recipe.name}">Default Title</h1>
+<div>
+    <img src="${recipe.imageUrl}"> <br>
+</div>
+
+<div class="view-recipe">
+    <p th:text="'Category: ' + ${recipe.category.name}"></p>
+    <ul th:text="'Ingredients: ' + ${recipe.ingredients}"></ul>
+    <p th:text="'Instructions: ' + ${recipe.description}"></p>
+
+</div>
+
+
+</body>
+</html>
