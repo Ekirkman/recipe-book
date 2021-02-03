@@ -31,6 +31,5 @@ public class HomeController {
         return "index";
     }
 
-//test
     
 }

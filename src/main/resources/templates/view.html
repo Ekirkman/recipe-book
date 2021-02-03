@@ -1,17 +1,12 @@
-<!DOCTYPE html>
+
 <html lang="en" xmlns:th="https://www.thymeleaf.org/">
-    <meta charset="UTF-8"/>
-<!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">-->
-    <head>
         <head th:replace="fragments :: head"></head>
         <nav th:replace="fragments :: page-header"></nav>
-
-
 <body class="container  body-content">
 
 <h1 th:text="${recipe.name}">Default Title</h1>
 <div>
-    <img th:src="${recipe.imageUrl}" width="320" height="320"> <br>
+    <img th:src="${recipe.imageUrl}" width="320" height="320" onerror="this.onerror=null; this.src='./images/meal-placeholder.jpg'" > <br>
 </div>
 
 <div class="view-recipe">
@@ -25,3 +20,7 @@
 
 </body>
 </html>
+
+
+
+<!--//<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">-->

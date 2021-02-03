@@ -7,7 +7,7 @@
 <form method='post' action="/saveEditedRecipe">
 
     <div>
-        <img  th:src="${editThisRecipe.imageUrl}" width="320" height="320"> <br>
+        <img  th:src="${editThisRecipe.imageUrl}" width="320" height="320" onerror="this.onerror=null; this.src='./images/meal-placeholder.jpg'"> <br>
         <input name="imageUrl" type="text" class="form-control" placeholder="Paste an image Url"/>
     </div>
     <div>
@@ -16,15 +16,15 @@
         </label>
     </div>
     <div class="input-group mb-3">
-        <label>Ingredients:
+        <label>Ingredients(uncheck box to remove):
             <br>
         <input id="ingredientInput" type="text" class="form-control" placeholder="Ex: 1 cup of flour" aria-label="Add Ingredient" aria-describedby="basic-addon2" name="ingredients" width="50px">
-            <tr th:each="ingredient : ${currentIngredients}">
-                <input  type="checkbox" th:id="${ingredient}" name="originalIngredients" th:text="${ingredient}" th:value="${ingredient}"/>
-            </tr>
-            <input type="hidden" name="hiddenIngredients" id="hide"/>
+                <tr th:each="ingredient : ${currentIngredients}">
+                    <input  type="checkbox" th:id="${ingredient}" name="originalIngredients" th:text="${ingredient}" th:value="${ingredient}" checked/>
+                </tr>
+            <input type="hidden" name="hiddenIngredients" id="hide"  />
         <div class="input-group-append">
-            <button class="btn btn-outline-info" id="add" type="button">Add Ingredient</button>
+            <button class="btn btn-outline-info" id="add" type="button">Add New Ingredient</button>
         </div>
         </label>
     </div> <div class="col-12">
@@ -51,6 +51,7 @@
         </label>
     </div>
     <input type="hidden" th:value="${editThisRecipe.id}" name="oldRecipeId"/>
+    <input type="hidden" name="ingredients"/>
 
 
     <button type="submit" value="Submit">Submit</button>
