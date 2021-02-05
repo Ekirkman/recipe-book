@@ -14,8 +14,9 @@
 <div class="view-recipe">
     <p th:text="'Prep Time: ' + ${recipe.prepTime}"></p>
     <p th:text="'Category: ' + ${recipe.category.name}"></p>
-    <p th:text="Ingredients":/>
+    <p th:text="'Ingredients:'"/>
     <li th:each="ingredient: ${myIngredients}" th:text="${ingredient}"></li>
+    <br>
     <p th:text="'Instructions: ' + ${recipe.description}"></p>
 
 </div>
