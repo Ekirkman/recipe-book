@@ -1,7 +1,10 @@
 package org.liftoff.recipebook.controllers;
 
+import org.liftoff.recipebook.models.Recipe;
+import org.liftoff.recipebook.models.RecipeData;
 import org.liftoff.recipebook.models.User;
 import org.liftoff.recipebook.models.UserData;
+import org.liftoff.recipebook.models.data.RecipeRepository;
 import org.liftoff.recipebook.models.data.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +23,9 @@ public class SearchController {
     private UserRepository userRepository;
 
     @Autowired
+    private RecipeRepository recipeRepository;
+
+    @Autowired
     AuthenticationController authenticationController;
 
     @PostMapping("search")
@@ -28,6 +34,10 @@ public class SearchController {
         List<User> results = new ArrayList<>();
         results = UserData.findUser(searchTerm, userRepository.findAll());
 
+        List<Recipe> recipeResults = new ArrayList<>();
+        recipeResults = RecipeData.findRecipes(searchTerm, recipeRepository.findAll());
+
+
         HttpSession session = request.getSession();
         User sessionUser = authenticationController.getUserFromSession(session);
         int userId = sessionUser.getId();
@@ -35,6 +45,7 @@ public class SearchController {
         model.addAttribute("profile", userRepository.findById(userId).get());
         model.addAttribute("results", results);
         model.addAttribute("searchTerm", searchTerm);
+        model.addAttribute("recipeNameResults",recipeResults);
         return "search";
     }
 }

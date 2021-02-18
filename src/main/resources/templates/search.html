@@ -5,11 +5,19 @@
 <body class="container body-content">
 <nav th:replace="fragments :: page-header"></nav>
 <div>
-    <p th:text="'Search Results for ' + ${searchTerm}"></p>
+    <p th:text="'Profile Results for ' + ${searchTerm}"></p>
     <th:block th:each = "user : ${results}">
        <ul>
            <a th:text="${user.username}" th:href="@{'/profile/' + ${user.id}}"></a>
        </ul>
+    </th:block>
+</div>
+<div>
+    <p th:text="'Recipe Results for ' + ${searchTerm}"></p>
+    <th:block th:each = "recipe : ${recipeNameResults}">
+        <ul>
+            <a th:text="${recipe.name}" th:href="'http://localhost:8080/view/recipe?id='+${recipe.id}"></a>
+        </ul>
     </th:block>
 </div>
 </body>
